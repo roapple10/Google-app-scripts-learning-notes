@@ -1,0 +1,37 @@
+https://www.youtube.com/watch?v=ZcNmur6xiX4&list=PLv9Pf9aNgemv62NNC5bXLR0CzeaIj5bcw&index=12
+
+function sendEmails(){
+
+
+  SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Email").activate();
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();  
+  var lr = ss.getLastRow();
+
+  var templateText = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Template").getRange(1,1).getValue();
+  //var emailText = templateText.replace("{name}","sss").replace("{title}","bbb")
+
+
+  var quotaleft =MailApp.getRemainingDailyQuota();
+  //Logger.log(quotaleft);
+
+
+  if ((lr-1) > quotaleft){
+
+    Browser.msgBox("You have "+quotaleft+" left mails and you are going to send "+(lr-1)+" Emails");
+
+  } else{
+    for(var i = 2;i<=lr;i++){
+
+    var emailAddress = ss.getRange(i,1).getValue();
+    var currentName = ss.getRange(i,2).getValue();
+    var currentClass = ss.getRange(i,3).getValue();
+
+    var messageBody = templateText.replace("{name}",currentName).replace("{title}",currentClass);
+    var subjectline = "Reminder:"+currentClass+"Upcoming Class";
+    //Logger.log(emailAddress);
+   
+    //MailApp.sendEmail( emailAddress,currentClass,messageBody);
+  }}
+}
+
+
