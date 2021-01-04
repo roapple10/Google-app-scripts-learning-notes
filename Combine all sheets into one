@@ -1,0 +1,63 @@
+//https://www.youtube.com/watch?v=rpITkG40rQs&list=PLv9Pf9aNgemv62NNC5bXLR0CzeaIj5bcw&index=17
+
+function combineData() {
+var masterSheet = "Master";
+
+var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(masterSheet);
+var lc = ss.getLastColumn();
+var lr = ss.getLastRow();
+ss.getRange(2,1,lr-1,lc).clearContent();
+
+
+var labels = ss.getRange(1,1,1,lc).getValues()[0];
+
+labels.forEach(function(label,i){
+  var colValues = getCombinedColumnValues(label,masterSheet);
+  ss.getRange(2,i+1,colValues.length,1).setValues(colValues);
+  //Logger.log(i+1);
+})
+
+//var colValues = getCombinedColumnValues("sales","Master");
+//Logger.log(labels);
+}
+
+
+function getCombinedColumnValues(label,masterSheetName) {
+var sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
+//Logger.log( sheets);
+
+var colValues = [];
+for(sheet in sheets){
+  
+  var sheetName = sheets[sheet].getSheetName();
+
+  if(sheetName !== masterSheetName){
+    var temValues = getColumnValues(label,sheetName);
+    colValues = colValues.concat(temValues);
+    }
+  }
+
+  return colValues;
+}
+
+
+
+function getColumnValues(label,sheetname) {
+var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetname);
+var colindex = getColumnIndex(label,sheetname);
+var numRows = ss.getLastRow()-1; //minus the header
+var colValues = ss.getRange(2,colindex,numRows,1).getValues();
+return colValues;
+}
+
+
+
+function getColumnIndex(label,sheetName) {
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  var lc = ss.getLastColumn();
+  var lookupRangeValues = ss.getRange(1,1,1,lc).getValues()[0];
+  
+  var index = lookupRangeValues.indexOf(label)+1;
+  return index
+}
