@@ -1,0 +1,28 @@
+//https://docs.google.com/spreadsheets/d/1_S93WRoxCxI0t0y_z6woG9IpDmqYqOe6HCqqWioYP-A/edit?usp=sharing
+//https://www.youtube.com/watch?v=8aOn0VMgG1w&list=PLv9Pf9aNgemv62NNC5bXLR0CzeaIj5bcw&index=19
+  
+
+function onEdit(){
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var datass = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("lists");
+  //ss.getActiveCell().getColumn();
+  //ss.getActiveCell().getRow();
+
+  var activeCell = ss.getActiveCell();
+  if(activeCell.getColumn()== 1 &&  activeCell.getRow() >1 ){
+
+        activeCell.offset(0,1).clearContent().clearDataValidations();
+        var makes = datass.getRange(1,1,1,datass.getLastColumn()).getValues();  //is an array
+        var makeIndex = makes[0].indexOf(activeCell.getValue())+1; //find the position
+        //makeIndex == 0 means wrong list
+        if(makeIndex != 0){
+
+        var validationRange = datass.getRange(3,makeIndex,datass.getLastRow());
+        var validationRule = SpreadsheetApp.newDataValidation().requireValueInRange(validationRange).build();
+        activeCell.offset(0,1).setDataValidation(validationRule);
+        //ss.getRange("D1").setValue(makeIndex);
+
+        }
+  }
+}
