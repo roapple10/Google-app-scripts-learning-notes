@@ -1,0 +1,43 @@
+//https://www.youtube.com/watch?v=FuHuqhrx_rY
+
+
+function myArray() {
+
+/*var names = ["Linda","Lisa","Peter","Joe"];
+var othernames= ["Jill","Bob"];
+names[1]= "Ana";
+names.push("Steve");
+names.push("Olivia"); // add the last one
+names.unshift("Jake"); // add the first one
+names.pop(); //delete the last one
+names.shift(); //delete the first one
+var combinednames = names.concat(othernames);
+var position = names.indexOf("Peter"); //search the index of Peter
+var results = names.join(); //join to text */
+
+var newarray = [["Linda",27],["Lisa",32]];
+var newpeople = [["pete",22]];
+
+//newarray.push(["Steve",43]);
+//newarray.shift();
+/*newarray[0].push("Chicago");
+newarray[1].push("Los Angeles");
+newarray[1][1]= 33;
+newarray[0]= ["bob",22,"New York"];*/
+var result = newarray.concat(newpeople);
+
+Logger.log(result);
+
+}
+
+
+function test(){
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = ss.getRange(1,1,4,3).getValues();
+  Logger.log(data);
+
+  var newarray = [["Linda",27],["Lisa",32],["Li",32]];
+
+  ss.getRange(1,5,newarray.length,newarray[0].length).setValues(newarray);
+
+}
