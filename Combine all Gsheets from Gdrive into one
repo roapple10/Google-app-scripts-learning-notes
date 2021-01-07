@@ -1,0 +1,124 @@
+function combineDataToMaster() {
+  //1pRRQYnXvMhjPS4sW6H1MfsXt2p5cTEaC
+  //application/vnd.google-apps.spreadsheet
+  var masterSheet = "";
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(masterSheet);
+  var labels = ss.getRange(1,1,1,5).getValues()[0];
+  
+
+labels.forEach(function(label,i){
+  //Logger.log(label);
+  var colValues = getCombinedColumnValues(label);
+  Logger.log(colValues);
+  if(colValues != null){
+  ss.getRange(2,i+1,colValues.length,1).setValues(colValues);
+}
+})
+
+
+//Logger.log(labels);
+
+}
+
+  
+
+function getCombinedColumnValues(label) {
+//var sheets  = SpreadsheetApp.openById(ssID).getSheetByName("");  
+//var sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
+//Logger.log( sheets);
+
+  var folder = DriveApp.getFolderById("");
+  var filesIterator = folder.getFiles();
+  var file;
+  var fileType;
+  var ssID;
+  var combinedData = [];
+  var data;
+  var colValues = [];
+  while(filesIterator.hasNext()){
+    file = filesIterator.next(); 
+    fileType = file.getMimeType();
+    if(fileType === "application/vnd.google-apps.spreadsheet"){
+      ssID = file.getId();
+
+    var temValues = getColumnValues(label,ssID);
+    colValues = colValues.concat(temValues);
+
+            //data = getDataFromSpreadsheet(ssID);
+            //combinedData = combinedData.concat(data);
+    }// if ends here
+  } // while ends here
+
+  return colValues;
+}
+
+function getColumnValues(label,ssID) {
+var sheetname = "";
+var ss = SpreadsheetApp.openById(ssID).getSheetByName(sheetname);
+var colindex = getColumnIndex(ssID,label,sheetname);
+if(colindex!=0){
+
+var numRows = ss.getLastRow()-1; //minus the header
+var colValues = ss.getRange(2,colindex,numRows,1).getValues();
+}
+else
+{ 
+var colValues = [];
+   }
+return colValues;
+}
+
+function getColumnIndex(ssID,label,sheetname) {
+
+  var ss = SpreadsheetApp.openById(ssID).getSheetByName(sheetname);
+  var lc = ss.getLastColumn();
+  var lookupRangeValues = ss.getRange(1,1,1,lc).getValues()[0];
+  
+  var index = lookupRangeValues.indexOf(label)+1;
+  //Logger.log(index);
+  return index
+}
+
+
+//----------------------------------------------------------------------------------------------
+
+function combineDataToGoal() {
+
+  var folder = DriveApp.getFolderById("------");
+  var filesIterator = folder.getFiles();
+ 
+  var file;
+  var fileType;
+  var ssID;
+  var combinedData = [];
+  var data;
+  while(filesIterator.hasNext()){
+    file = filesIterator.next(); 
+    fileType = file.getMimeType();
+    if(fileType === "application/vnd.google-apps.spreadsheet"){
+      ssID = file.getId();
+      data = getDataFromSpreadsheetGoal(ssID)
+      
+      combinedData = combinedData.concat(data);
+    }// if ends here
+  } // while ends here
+  
+  var ws = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("");
+  //ws.getRange(row, column, numRows, numColumns)
+  ws.getRange("A2:R").clearContent();
+  ws.getRange(2, 1, combinedData.length, combinedData[0].length).setValues(combinedData);
+}
+
+function getDataFromSpreadsheetGoal(ssID){
+
+  var ss  = SpreadsheetApp.openById(ssID);
+  var ws = ss.getSheetByName("");
+  var data =ws.getRange("A2:R" + ws.getLastRow()).getValues();
+  return data;
+}
+
+
+
+
+
+
