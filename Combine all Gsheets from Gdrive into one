@@ -1,5 +1,4 @@
 function combineDataToMaster() {
-  //1pRRQYnXvMhjPS4sW6H1MfsXt2p5cTEaC
   //application/vnd.google-apps.spreadsheet
   var masterSheet = "";
   var ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(masterSheet);
