@@ -1,3 +1,5 @@
+https://www.youtube.com/watch?v=985XJOeigpA&list=PLv9Pf9aNgemvD9NFa86_udt-NWh37efmD&index=5
+
 function myarray() {
  
   var ss = SpreadsheetApp.getActiveSpreadsheet();
