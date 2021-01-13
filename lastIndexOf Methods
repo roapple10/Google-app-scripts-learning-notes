@@ -1,0 +1,21 @@
+//https://www.youtube.com/watch?v=PT_TDhMhWsE&list=PLv9Pf9aNgemvD9NFa86_udt-NWh37efmD&index=7
+
+function Index() {
+ 
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var activeSheet = ss.getActiveSheet();
+  var data = activeSheet.getRange(2,1,23,1).getValues();
+  var new_data = data.map(function(r){ 
+      if(typeof r[0] === "string"){
+        return r[0].toLowerCase();
+      }else{
+        return r[0]
+
+      }
+  })
+
+  var search = 21;
+   //Logger.log(new_data)
+  Logger.log(new_data.indexOf(search,0));
+   // Logger.log(new_data.lastIndexOf(40));
+}
