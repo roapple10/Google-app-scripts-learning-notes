@@ -1,0 +1,19 @@
+//https://www.youtube.com/watch?v=zWcNzLbJpb0&list=PLv9Pf9aNgemvD9NFa86_udt-NWh37efmD&index=10
+
+function Filter_out_the_blankrow(){
+
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+var activeSheet = ss.getActiveSheet();
+var odata = activeSheet.getRange(2, 1,activeSheet.getLastRow()-1,5).getValues();
+
+
+var data = odata.filter(function(r){
+  return !r.some(function(cell){ //or some
+    return cell === "";
+  });
+});
+Logger.log(data);
+activeSheet.getRange(2,1,activeSheet.getLastRow()-1,5).clearContent();
+activeSheet.getRange(2,1,data.length,data[0].length).setValues(data);
+
+}
