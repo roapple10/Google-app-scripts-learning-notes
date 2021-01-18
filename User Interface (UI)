@@ -1,0 +1,77 @@
+//https://www.youtube.com/watch?v=A5VJM9g4L6c
+
+function initMenu(){
+
+  //This is where we access the UI;
+  var ui = SpreadsheetApp.getUi();
+  var menu = ui.createMenu("My Macros");
+
+  //add regular item to menu
+  menu.addItem("My Time Macro","myMarcro");
+  menu.addItem("BOx","showMessage");
+  menu.addSeparator();
+  menu.addItem("Prompt","showInputBox");
+  menu.addSeparator();
+
+  //add submenu
+  var submenu = ui.createMenu("Special Functions");
+  submenu.addItem("Show the box","showMessage");
+  submenu.addItem("Same date","myMarcro");
+  menu.addSubMenu(submenu);
+
+  //render all of above
+  menu.addToUi();
+
+}
+
+function onOpen(){
+  initMenu();
+}
+
+function showMessage(){
+
+  var ui = SpreadsheetApp.getUi();
+  var buttonPressed = ui.alert("Are you sure you want to run!",ui.ButtonSet.YES_NO);
+
+  if(buttonPressed == ui.Button.YES){
+    myMarcro();
+  } else if(buttonPressed == ui.Button.NO){  }
+  else if(buttonPressed == ui.Button.CANCEL){  }
+  else if(buttonPressed == ui.Button.CLOSE){ ui.alert("You closed it");  }
+}
+
+function showInputBox(){
+var ui = SpreadsheetApp.getUi();
+var input = ui.prompt("Your input","Please enter Auditor input",ui.ButtonSet.OK_CANCEL);
+
+
+
+if(input.getSelectedButton() == ui.Button.OK){
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+var ws = ss.getSheetByName("original");
+var data = ws.getRange("A2:E"+ws.getLastRow()).getValues();
+var userSelectedRep = input.getResponseText().toLowerCase(); 
+var newData = data.filter(function(r){return r[2].toLowerCase() == userSelectedRep});
+var newWorksheet = ss.insertSheet(userSelectedRep);
+ws.getRange("A1:E1").copyTo(newWorksheet.getRange("A1:E1"));
+newWorksheet.getRange(2,1,newData.length,newData[0].length).setValues(newData);
+
+}else if(input.getSelectedButton() == ui.Button.CANCEL){
+
+}else if(input.getSelectedButton() == ui.Button.CLOSE){
+
+}else{
+
+}
+
+
+}
+
+
+
+
+
+function myMarcro(){
+
+  SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().getRange("a1").setValue(new Date());
+}
