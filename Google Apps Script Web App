@@ -1,0 +1,24 @@
+
+//https://www.youtube.com/watch?v=1toLqGwMRVc&t=1s
+//https://script.google.com/d/1S2fcS-Oh5m-HtEbb6Ng8m6m4US9L99iD5WuKYdxgDBJIjmyKZbaJRmKO/edit?usp=sharing
+
+
+function doGet(e) {
+  
+  Logger.log(e);
+  return HtmlService.createTemplateFromFile("page").evaluate();
+
+}
+
+function userClicked(userInfo){
+  var url = "https://docs.google.com/spreadsheets/d/1NuWATGLJjiHc0RuUDx-ujATvgF-810TPDQUFx-ZG-W4/edit#gid=0"
+  var ss = SpreadsheetApp.openByUrl(url);
+  var ws  = ss.getSheetByName("Data");
+  ws.appendRow([userInfo.firstname,userInfo.lastname,userInfo.app,new Date()]);
+  //Logger.log(name+" Clicked the Button");
+
+}
+
+function include(filename){
+ return HtmlService.createHtmlOutputFromFile(filename).getContent();
+}
