@@ -1,0 +1,105 @@
+https://www.youtube.com/watch?v=lc8-vJ5r3e0&list=PLv9Pf9aNgemt82hBENyneRyHnD-zORB3l&index=5
+
+
+page-Js------------------------------------------------------------
+ <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('select');
+      var instances = M.FormSelect.init(elems);
+    });
+
+      document.getElementById("btn").addEventListener("click",doStuff);
+      document.getElementById("zip").addEventListener("input",getEstimate);
+
+
+      function doStuff(){
+        var userInfo = {};
+        userInfo.firstname = document.getElementById("fn").value;
+        userInfo.lastname = document.getElementById("ln").value;
+        userInfo.app = document.getElementById("app").value;
+        userInfo.zip = document.getElementById("zip").value;
+        userInfo.est = document.getElementById("est").value;
+
+
+        google.script.run.userClicked(userInfo);
+        document.getElementById("fn").value="";
+        document.getElementById("ln").value="";
+        document.getElementById("zip").value="";
+        document.getElementById("est").value="";
+         M.updateTextFields();
+         
+        var myApp = document.getElementById("app");
+        myApp.selectedIndex=0;
+        M.FormSelect.init(myApp)
+
+      }
+
+      function getEstimate(){
+        var zipCode = document.getElementById("zip").value;
+        if(zipCode.length ===5){
+        google.script.run.withSuccessHandler(updateEstimate).getCost(zipCode);
+
+        }
+      }
+
+      function updateEstimate(cost){
+        document.getElementById("est").value = cost;
+        M.updateTextFields();
+      }
+    </script>
+    page-Js------------------------------------------------------------
+    
+    main function------------------------------------------------------------
+    
+     var url = "https://docs.google.com/spreadsheets/d/1NuWATGLJjiHc0RuUDx-ujATvgF-810TPDQUFx-ZG-W4/edit#gid=0"
+
+function doGet(e) {
+  var ss = SpreadsheetApp.openByUrl(url);
+  var ws  = ss.getSheetByName("Options");
+  var list = ws.getRange(1,1,ws.getRange("A1").getDataRegion().getLastRow(),1).getValues();
+
+  var htmlListArray = list.map(function(r){return '<option>'+ r[0] + '</option>';}).join('');
+  Logger.log(htmlListArray);
+
+  var tmp = HtmlService.createTemplateFromFile("page");
+  tmp.list = htmlListArray
+  return tmp.evaluate()
+
+}
+
+function userClicked(userInfo){
+
+  var ss = SpreadsheetApp.openByUrl(url);
+  var ws  = ss.getSheetByName("Data");
+  ws.appendRow([userInfo.firstname,userInfo.lastname,userInfo.app,userInfo.zip,userInfo.est,new Date()]);
+  //Logger.log(name+" Clicked the Button");
+
+}
+
+
+function getCost(zipCode){
+  var ss = SpreadsheetApp.openByUrl(url);
+  var ws  = ss.getSheetByName("Estimate");
+  var data = ws.getRange(1,1,ws.getLastRow(),2).getValues();
+
+  var zipCodelist =data.map(function(r){return r[0];});
+  var costlist =data.map(function(r){return r[1];});
+  var position = zipCodelist.indexOf(zipCode);
+  //zipCode = 77281
+  //costlist
+  Logger.log(zipCodelist)
+  
+  if(position >-1){
+  return "NT " + costlist[position].toFixed(2);
+  }else{
+    return 'Unavailable';
+  }
+
+}
+
+function include(filename){
+ return HtmlService.createHtmlOutputFromFile(filename).getContent();
+}
+
+main function------------------------------------------------------------
