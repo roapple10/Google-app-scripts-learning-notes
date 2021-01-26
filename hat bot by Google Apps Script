@@ -1,0 +1,63 @@
+//https://dev.to/kurab/serverless-chat-bot-by-google-apps-script-step-step-41nb
+
+function notifyEvents() {
+ 
+  const calendarId = '';
+  const calendar = CalendarApp.getCalendarById(calendarId);
+  const calendarName = calendar.getId();
+  const today = new Date("1/27/2021"); //new Date("1/23/2021"))
+  const dayOfWeek = today.getDay();
+  if (dayOfWeek === 0 || dayOfWeek === 6) return;
+
+  const calendarEvents = calendar.getEventsForDay(today);
+  
+  var message = '\nNotification from ' + calendarName + ' at '+
+                 Utilities.formatDate(today, 'GMT+0900', 'MM/dd') +
+                '\n-----------------------------------------';
+
+  
+  if (calendarEvents.length) {
+    for (var event of calendarEvents) {
+      var eventTitle = event.getTitle() ? event.getTitle() : '(no title)';
+      var eventDesc = event.getDescription() ? event.getDescription() : '(no Description)';
+      if(eventTitle=="Early Warning System"){
+      message = message + '\n- ' + eventTitle +'\n ' +eventDesc;
+      
+      if (!event.isAllDayEvent()) {
+        message = message +
+                  Utilities.formatDate(event.getStartTime(), 'GMT+0900', 'HH:mm') + '~' +
+                  Utilities.formatDate(event.getEndTime(), 'GMT+0900', 'HH:mm') + '(JST)'+
+                  event.getDescription();
+                  //Logger.log(message);
+                  postToChat(message);
+      }else{
+                  postToChat(message);
+                  //Logger.log(message);
+        }
+  }else {
+      message = message + '\nThere is no event, today. Good day!^^';
+    }
+  }
+  //Logger.log(message);
+  //postToChat(message);
+
+  }
+}
+
+function postToChat(message) {
+  const chatWebhook = '';
+  const messageText = { 'text': message };
+  const options = {
+    'method': 'POST',
+    'headers': {
+      'Content-Type': 'application/json; charset=UTF-8'
+    },
+    'payload': JSON.stringify(messageText)
+  };
+  var result = UrlFetchApp.fetch(chatWebhook, options);
+  Logger.log(result);
+}
+
+
+paste on chat webhoods
+https://lh4.googleusercontent.com/proxy/_2jSOpfsaQARKKBA89qrheATx_2dsxHbGxI
