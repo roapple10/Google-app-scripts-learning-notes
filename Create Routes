@@ -1,0 +1,45 @@
+ //youtube.com/watch?v=9LHPU0dYyrU&list=PLv9Pf9aNgemt82hBENyneRyHnD-zORB3l&index=8
+ 
+ var Route = {};
+    Route.path = function(route,callback){
+    Route[route] = callback;  
+  }
+
+
+function doGet(e) {
+  /*if (e.parameters.v=="form"){
+      return loadForm();
+    }else{
+      return HtmlService.createTemplateFromFile("Home").evaluate();
+    }*/
+
+    Route.path("form",loadForm);
+    Route.path("about",loadAbout);
+
+    if (Route[e.parameters.v]){
+      return Route[e.parameters.v]();
+    }else{
+      return HtmlService.createTemplateFromFile("Home").evaluate();
+    }
+
+}
+
+function loadForm(){
+  var ss = SpreadsheetApp.openByUrl(url);
+  var ws  = ss.getSheetByName("Options");
+  var list = ws.getRange(1,1,ws.getRange("A1").getDataRegion().getLastRow(),1).getValues();
+
+  var htmlListArray = list.map(function(r){return '<option>'+ r[0] + '</option>';}).join('');
+  Logger.log(htmlListArray);
+
+  var tmp = HtmlService.createTemplateFromFile("page");
+  tmp.list = htmlListArray;
+  return tmp.evaluate()
+
+  return render("page",{list: htmlListArray});
+
+}
+
+function loadAbout(){
+  return HtmlService.createHtmlOutput("<h1>About Us</h1>");
+}
