@@ -1,0 +1,33 @@
+//https://www.youtube.com/watch?v=9LHPU0dYyrU&t=672s
+
+function render(file,argsObject){
+
+  var tmp = HtmlService.createTemplateFromFile(file);
+      if(argsObject){
+
+      var keys = Object.keys(argsObject);
+      keys.forEach(function(key){
+        tmp[key] = argsObject[key];
+      });
+      } //end if
+  return tmp.evaluate()
+}
+
+function doGet(e) {
+  /*if (e.parameters.v=="form"){
+      return loadForm();
+    }else{
+      return HtmlService.createTemplateFromFile("Home").evaluate();
+    }*/
+
+    Route.path("form",loadForm);
+    Route.path("about",loadAbout);
+ 
+
+    if (Route[e.parameters.v]){
+      return Route[e.parameters.v]();
+    }else{
+      return render("Home");
+    }
+
+}
