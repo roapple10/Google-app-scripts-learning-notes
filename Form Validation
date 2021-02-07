@@ -1,0 +1,47 @@
+     
+     //https://www.youtube.com/watch?v=QXTPf25aSOE&list=PLv9Pf9aNgemt82hBENyneRyHnD-zORB3l&index=10
+     
+     
+     function buttonClickAction(){
+         var toValidate = {
+            fn: "First Name is Required",
+            ln: "Last Name is Required",
+            app: "Please choose your App",
+            zip: "Please choose valided zip",
+            favefunction: "Please choose Your Favorite Function",
+            prefDate: "Please choose Your Date",
+      
+
+          };
+
+        var idKeys = Object.keys(toValidate);
+
+        var allValid = true;
+            idKeys.forEach(function(id){
+              var isValid = checkIfValid(id,toValidate[id]);
+              if(!isValid){
+                allValid = false;
+              }
+            });
+
+          if(allValid){
+          addRecord();
+          }
+      }
+
+      function checkIfValid(elID,message){
+          var isValid = document.getElementById(elID).checkValidity();
+          
+          if(!isValid){
+            //warn the user
+            M.toast({html: message});
+            return false;
+          }
+          return true;
+      }
+      
+      
+    function populateWords(words){
+      var autocomplete = document.getElementById('favefunction');
+      var instance = M.Autocomplete.init(autocomplete, {data: words});
+    }  
