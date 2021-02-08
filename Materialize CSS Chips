@@ -1,0 +1,16 @@
+//https://www.youtube.com/watch?v=RX9JPEOkf6Q&list=PLv9Pf9aNgemt82hBENyneRyHnD-zORB3l&index=12
+//https://materializecss.com/chips.html
+var chip;
+    document.addEventListener('DOMContentLoaded', function() {
+
+      document.getElementById("btn").addEventListener("click",buttonClickAction);
+      document.getElementById("zip").addEventListener("input",getEstimate);
+      
+      var chipEl = document.getElementById('chip');
+      chip = M.Chips.init(chipEl);
+
+      var selectBoxes = document.querySelectorAll('select');
+      M.FormSelect.init(selectBoxes);
+      google.script.run.withSuccessHandler(populateDates).getCalendarBusyDays();
+      google.script.run.withSuccessHandler(populateWords).getWords();
+    });
