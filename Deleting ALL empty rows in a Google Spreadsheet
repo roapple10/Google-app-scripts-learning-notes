@@ -1,0 +1,21 @@
+//https://stackoverflow.com/questions/26386492/deleting-all-empty-rows-in-a-google-spreadsheet
+
+function deleteEmptyRows(){ 
+  var sh = SpreadsheetApp.getActiveSheet();
+  var data = sh.getDataRange().getValues();
+  var targetData = new Array();
+  for(n=0;n<data.length;++n){
+    if(data[n].join().replace(/,/g,'')!=''){ targetData.push(data[n])};
+    Logger.log(data[n].join().replace(/,/g,''))
+  }
+  sh.getDataRange().clear();
+  sh.getRange(1,1,targetData.length,targetData[0].length).setValues(targetData);
+  var sh = SpreadsheetApp.getActiveSheet();
+}
+
+function removeEmptyRows(){
+  var sh = SpreadsheetApp.getActiveSheet();
+  var maxRows = sh.getMaxRows(); 
+  var lastRow = sh.getLastRow();
+  sh.deleteRows(lastRow+1, maxRows-lastRow);
+}
