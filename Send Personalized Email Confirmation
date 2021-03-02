@@ -1,0 +1,18 @@
+//https://www.youtube.com/watch?v=gi_xlZ5K9rs&list=PLv9Pf9aNgemt82hBENyneRyHnD-zORB3l&index=15
+
+function userClicked(userInfo){
+
+  var ss = SpreadsheetApp.openByUrl(url);
+  var ws  = ss.getSheetByName("Data");
+  Logger.log(userInfo);
+  ws.appendRow([userInfo.firstname,userInfo.lastname,userInfo.app,userInfo.zip,userInfo.est,new Date(),userInfo.chip.join(),userInfo.email]);
+  var subject = 'Thanks for your submission';
+  var body = "We'll get back to you shortly";
+  var htmlTemplate = HtmlService.createTemplateFromFile("email");
+  htmlTemplate.fname = userInfo.firstname;
+  htmlTemplate.lname = userInfo.lastname;
+  var htmlBody = htmlTemplate.evaluate().getContent();
+  GmailApp.sendEmail(userInfo.email, subject, body, {htmlBody: htmlBody});
+  //Logger.log(name+" Clicked the Button");
+
+}
