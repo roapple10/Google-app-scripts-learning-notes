@@ -1,0 +1,43 @@
+//https://www.youtube.com/watch?v=6zFowiTNhqI&list=RDCMUC8p19gUXJYTsUPEpusHgteQ&start_radio=1&t=71s
+//https://getbootstrap.com/docs/5.0/forms/overview/
+
+<script>
+
+        function loadView(options){
+        var id = typeof options.id === "undefined" ? "app" : options.id; 
+        //if nothing is paased than then use app as id otherwise use option.id 
+        var cb = typeof options.callback === "undefined" ? function(){} : options.callback; 
+        
+        google.script.run.withSuccessHandler(function(html){
+          document.getElementById(id).innerHTML= html;
+          typeof options.params === "undefined" ? cb() : cb(options.params);
+        })[options.func]();
+      }
+
+      function loadSearchView(){
+       loadView({func: "loadSearchView"});
+       //loadView({func: "loadSearchView", callback: otherFunc, params: { title: "Another Search"}});
+      }
+
+      function loadAddCustomerView(){
+       loadView({func: "loadAddCustomersView"});
+       //loadView({func: "loadSearchView", callback: otherFunc, params: { title: "Another Search"}});
+      }
+      function loadEditCustomersView(){
+       loadView({func: "loadEditCustomersView"});
+       //loadView({func: "loadSearchView", callback: otherFunc, params: { title: "Another Search"}});
+      }
+
+      /*function otherFunc(params){
+         document.getElementById("h1").textContent = params.title;
+      }*/
+
+
+
+
+      document.getElementById("search-link").addEventListener("click",loadSearchView);
+      document.getElementById("add-customer-link").addEventListener("click",loadAddCustomerView);
+      document.getElementById("home-link").addEventListener("click",loadEditCustomersView);
+      
+
+    </script>
