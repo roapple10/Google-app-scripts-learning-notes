@@ -1,0 +1,51 @@
+//https://spreadsheet.dev/send-html-email-from-google-sheets
+
+
+function getEmailHtml(stockData) {
+  var htmlTemplate = HtmlService.createTemplateFromFile("Template.html");
+  var htmlBody = htmlTemplate.evaluate().getContent();
+  return htmlBody;
+}
+
+
+function sendEmail() {
+  var stockData = getData();
+  var body = getEmailText(stockData);
+  var htmlBody = getEmailHtml(stockData);
+  var to_email = SpreadsheetApp.getActive().getSheetByName("Email Distro").getRange("B7").getValue();
+  var cc_email = SpreadsheetApp.getActive().getSheetByName("Email Distro").getRange("B11").getValue();
+
+  MailApp.sendEmail({
+    to: to_email,
+    cc: cc_email,
+    subject: "",
+    body: body,
+    htmlBody: htmlBody
+  });
+}
+
+function getEmailText(stockData) {
+  var text = "";
+  stockData.forEach(function(stock) {
+    text = text + stock.name + "\n" + stock.ticker + "\n" + stock.price + "\n-----------------------\n\n";
+  });
+  return text;
+}
+
+/**
+ * @OnlyCurrentDoc
+ */
+function getData() {
+  var values = SpreadsheetApp.getActive().getSheetByName("").getRange("").getValues();
+  values.shift(); //remove headers
+  var stocks = [];
+  values.forEach(function(value) {
+    var stock = {};
+    stock.name = value[0];
+    stock.ticker = value[1];
+    stock.price = value[2];
+    stocks.push(stock);
+  })
+  //Logger.log(JSON.stringify(stocks));
+  return stocks;
+}
