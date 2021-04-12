@@ -1,0 +1,19 @@
+//https://spreadsheet.dev/export-list-of-files-in-google-drive-to-google-sheets-using-apps-script
+
+function getMyFilesFromDrive() {
+  var folder = DriveApp.getFolderById("");
+  //var filesIterator = 
+  var myFiles = folder.getFiles();
+ //var myFiles = DriveApp.searchFiles('"me" in owners');
+ var sheet = SpreadsheetApp.getActive().getSheetByName("Files");
+ sheet.clear();
+ var rows = [];
+ rows.push(["ID", "Name", "Url"]);
+ while(myFiles.hasNext()) {
+   var file = myFiles.next();
+   if(file != null) {
+     rows.push([file.getId(), file.getName(), file.getUrl()]);
+   }
+ }
+ sheet.getRange(1,1,rows.length,3).setValues(rows);
+}
