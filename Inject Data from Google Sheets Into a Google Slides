@@ -1,0 +1,65 @@
+function createMenu_(){
+ const ui = SlidesApp.getUi();
+ const menu = ui.createMenu("Custom Menu");
+ menu.addItem("Open Form","generateLandingPagesReport");
+ menu.addToUi();
+}
+
+function onOpen(){
+  
+  createMenu_();
+
+}
+
+On Google slide
+//https://www.upbuild.io/blog/inject-google-sheets-data-into-slides/
+
+function generateLandingPagesReport() {
+  var dataSpreadsheetUrl = "/edit"; //make sure this includes the '/edit at the end
+  var ss = SpreadsheetApp.openByUrl(dataSpreadsheetUrl);
+  var deck = SlidesApp.getActivePresentation();
+  var sheet = ss.getSheetByName('content-landing-pages');
+  var values = sheet.getRange('A8:J17').getValues();
+  var slides = deck.getSlides();
+  var templateSlide = slides[1];
+  var presLength = slides.length;
+  
+  values.forEach(function(page){
+  if(page[0]){
+    
+   var landingPage = page[0];
+   var sessions = page[1];
+   var newSessions = page[2];
+   var pagesPer = page[5];
+   var goalRate = page[7];
+   var goalValue = page[9];   
+   
+    //Do some math for those percentages and rounding
+    /*newSessions = newSessions * 100
+    newSessions = Math.round(newSessions * 100) / 100
+    goalRate = goalRate * 100
+    goalRate = Math.round(goalRate * 100) / 100*/
+    
+   templateSlide.duplicate(); //duplicate the template page
+   slides = deck.getSlides(); //update the slides array for indexes and length
+   newSlide = slides[2]; // declare the new page to update
+    
+    
+   var shapes = (newSlide.getShapes());
+     shapes.forEach(function(shape){
+       shape.getText().replaceAllText('{{landing page}}',landingPage);
+       shape.getText().replaceAllText('{{sessions}}',sessions);
+       shape.getText().replaceAllText('{{new sessions}}',newSessions);
+       shape.getText().replaceAllText('{{pages per session}}',pagesPer);
+       shape.getText().replaceAllText('{{goal rate}}',goalRate);
+       shape.getText().replaceAllText('{{goal value}}',goalValue);
+    }); 
+   presLength = slides.length; 
+   newSlide.move(presLength); 
+  } // end our conditional statement
+  }); //close our loop of values
+
+//Remove the template slide
+templateSlide.remove();
+  
+}
